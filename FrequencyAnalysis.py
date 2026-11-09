@@ -163,8 +163,7 @@ def main():
     for letter in ALPHABET:
         count = counts[letter]
         percent = (count / total * 100) if total > 0 else 0.0
-        bar = "#" * count  # simple visual bar
-        print(f"{letter:<8} {count:<8} {percent:<8.2f}% {bar}")
+        print(f"{letter:<8} {count:<8} {percent:<8.2f}%")
 
     print(f"\nTotal letters counted: {total}")
 
