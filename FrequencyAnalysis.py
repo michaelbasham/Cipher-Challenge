@@ -2,15 +2,25 @@
 """Letter frequency analysis for a piece of text."""
 
 import os
+import sys
 
 import matplotlib.pyplot as plt
 
 ALPHABET = "ABCDEFGHIJKLMNOPQRSTUVWXYZ"
 
+# Text file bundled with the project, used by default when the user answers yes.
+TEXT_FILE = "textFA.txt"
+
 
 def clear_terminal():
     """Clear the terminal screen."""
     os.system("cls" if os.name == "nt" else "clear")
+
+
+def read_text_from_file(path):
+    """Return the contents of the text file at path."""
+    with open(path, "r", encoding="utf-8") as file:
+        return file.read()
 
 
 # Approximate letter frequencies in English (as percentages, 2 decimal places).
@@ -126,7 +136,23 @@ def plot_frequency(counts, total):
 def main():
     clear_terminal()
     print("=== Letter Frequency Analysis ===")
-    text = input("Enter the text to analyze: ")
+
+    # Prefer the text file bundled with the project.
+    default_path = os.path.join(os.path.dirname(os.path.abspath(__file__)), TEXT_FILE)
+
+    answer = input(f"Use the text from '{TEXT_FILE}'? (y/n): ").strip().lower()
+
+    if answer in ("y", "yes"):
+        try:
+            text = read_text_from_file(default_path)
+        except OSError as exc:
+            print(f"Could not read '{TEXT_FILE}': {exc}")
+            return
+    else:
+        # Read from stdin until EOF (Ctrl-D, or Ctrl-Z then Enter on Windows)
+        # so text can be typed or pasted directly.
+        print("Type or paste your text, then press Ctrl-D (Ctrl-Z on Windows) to finish:")
+        text = sys.stdin.read()
 
     counts, total = analyze_frequency(text)
 
